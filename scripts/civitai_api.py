@@ -104,10 +104,16 @@ def contenttype_folder(content_type, desc=None, custom_folder=None):
     ext_dir     = Path(extensions_dir)                                          # Extensions directory path
 
     def resolve_path(attr, fallback):
-        # Returns a Path from cmd_opts if set, otherwise fallback
-        if getattr(cmd_opts, attr, None) and not custom_folder:
-            return Path(getattr(cmd_opts, attr))
+        # Returns a Path from cmd_opts if set, otherwise fallback. if cmd_opts holds a list of multiple paths, returns the first one.
+        val = getattr(cmd_opts, attr, None)
+
+        if val and not custom_folder:
+            if isinstance(val, (list, tuple)):
+                val = val[0] if val else None
+            return Path(val) if val else fallback
+
         return fallback
+
 
     # Mapping for content types
     content_type_map = {
@@ -115,10 +121,10 @@ def contenttype_folder(content_type, desc=None, custom_folder=None):
         'Checkpoint': lambda: resolve_path('ckpt_dir', resolve_path('ckpt_dirs', main_models / 'Stable-diffusion')),
         'TextualInversion': lambda: resolve_path('embeddings_dir', main_data / 'embeddings'),
         'AestheticGradient': lambda: (Path(custom_folder) if custom_folder else ext_dir / 'stable-diffusion-webui-aesthetic-gradients') / 'aesthetic_embeddings',
-        'LORA': lambda: resolve_path('lora_dir', main_models / 'Lora'),
-        'LoCon': lambda: resolve_path('lora_dir', main_models / 'Lora'), # 💩
-        'DoRA': lambda: resolve_path('lora_dir', main_models / 'Lora'),  # 💩
-        'VAE': lambda: resolve_path('vae_dir', main_models / 'VAE'),
+        'LORA': lambda: resolve_path('lora_dir', resolve_path('lora_dirs', main_models / 'Lora')),
+        'LoCon': lambda: resolve_path('lora_dir',resolve_path('lora_dirs', main_models / 'Lora')), # 💩
+        'DoRA': lambda: resolve_path('lora_dir',resolve_path('lora_dirs', main_models / 'Lora')),  # 💩
+        'VAE': lambda: resolve_path('vae_dir',resolve_path('vae_dirs', main_models / 'VAE')),
         'Controlnet': lambda: resolve_path('controlnet_dir', main_models / 'ControlNet'),
         'Poses': lambda: main_models / 'Poses',
         'MotionModule': lambda: ext_dir / 'sd-webui-animatediff' / 'model',
