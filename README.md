@@ -1,5 +1,6 @@
-[!FORK INFO]
- So far, this is just a minor fork (of anxety's excellent personal fork of the now-discontinued a1111 plugin by blafking) where I can test out some tweaks to improve its compatibility with sd-webui-forge-neo.
+> [!Important]
+> ## FORK INFO
+> So far, this is just a minor fork (of anxety's excellent personal fork of the now-discontinued a1111 plugin by blafking) where I can test out some tweaks to improve its compatibility with sd-webui-forge-neo.
 
 ___________
 
